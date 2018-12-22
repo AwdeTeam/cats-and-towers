@@ -7,7 +7,7 @@ from pgmodel.core import game
 config = {
     "global": {
         "starts_running": True,
-        "fps":50
+        "fps":60
     },
     "world": {},
     "graphics": {

@@ -18,7 +18,7 @@ class Wall:
         
     def init_physics(self, space):
         segment = pymunk.Segment(space.static_body, self.pos1, self.pos2, 3)
-        segment.friction = .9
+        segment.friction = .4
         segment.elasticity = .9
         self.segment = segment
         space.add(segment)

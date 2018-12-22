@@ -11,8 +11,11 @@ class Actor:
         self.y = 500
         self.h = 50
         self.w = 50
-        self.mass = 20.01
+        self.mass = 20
         self.body = None # physics
+        self.grounded = False
+        self.allowed_jumps = 2
+        self.remaining_jumps = self.allowed_jumps
 
     def set_pos(self, x, y):
         """ Change the position (onscreen?) of this actor """
@@ -25,8 +28,8 @@ class Actor:
         body.position = self.x, self.y
         poly = pymunk.Poly.create_box(body, (self.h, self.w))
 
-        body.friction = .9
-        body.elasticity = .9
+        poly.friction = .4
+        poly.elasticity = 0 # don't bounce
         
         self.body = body
         space.add(body, poly)
