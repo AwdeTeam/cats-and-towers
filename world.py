@@ -26,6 +26,18 @@ class World:
         self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
         self.game.register_actor(wall.Wall(self, self.game, (-10000, 10), (10000, 10)))
 
+        def platform_collision_presolve(arbiter, space, data):
+            #print("Handling collision")
+            #print(arbiter.contact_point_set.normal)
+            if arbiter.contact_point_set.normal[1] > .5:
+                return False
+            return True
+            
+        platform_handler = self.space.add_collision_handler(1, 2)
+        platform_handler.pre_solve = platform_collision_presolve
+
+        
+
     def update(self, dt):
         """ Run the physics simulation a step """
 
@@ -46,6 +58,7 @@ class World:
             #print(arbiter.shapes[1])
             #print(arbiter.shapes[1].friction)
             n = -arbiter.contact_point_set.normal
+            #print(n)
             if n.y > grounding["normal"].y:
                 grounding["normal"] = n
                 grounding["penetration"] = -arbiter.contact_point_set.points[0].distance

@@ -20,6 +20,7 @@ class Wall:
         segment = pymunk.Segment(space.static_body, self.pos1, self.pos2, 3)
         segment.friction = .4
         segment.elasticity = .9
+        segment.collision_type = 2
         self.segment = segment
         space.add(segment)
     
