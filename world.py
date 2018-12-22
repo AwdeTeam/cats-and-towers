@@ -21,13 +21,18 @@ class World:
     def register_actor(self, actor):
         """ Add physics entity for given actor """
         self.actors.append(actor)
-        
-        body = pymunk.Body(1, 1)
-        body.position = actor.x, actor.y
 
-        poly = pymunk.Poly.create_box(body)
-        self.space.add(body, poly)
-        actor.body = body
+        actor.init_physics(self.space)
+        
+        #self.space.add(body, poly)
+        
+        #body = pymunk.Body(1, 1)
+        #body.position = actor.x, actor.y
+
+        #poly = pymunk.Poly.create_box(body)
+        #self.space.add(body, poly)
+        #actor.body = body
+        
 
     def handle_event(self, event):
         pass

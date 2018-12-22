@@ -15,12 +15,19 @@ class Actor:
         """ Change the position (onscreen?) of this actor """
         self.x = x
         self.y = y
+
+    def init_physics(self, space):
+        body = pymunk.Body(1, 1)
+        body.position = self.x, self.y
+        poly = pymunk.Poly.create_box(body, (50, 50))
+        self.body = body
+        space.add(body, poly)
+        
     
     def render(self, screen):
         """ All drawing logic for displaying this actor onscreen """
-        #pygame.draw.rect(screen, (0, 128, 255), pygame.Rect(self.x, self.y, 50, 50))
         position = pymunk.pygame_util.to_pygame(self.body.position, screen)
-        print(position)
+        #print(position)
         pygame.draw.rect(screen, (0, 128, 255), pygame.Rect(position[0], position[1], 50, 50))
         
 

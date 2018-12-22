@@ -2,6 +2,7 @@
 
 import pygame
 from pygame import Color
+import pymunk.pygame_util
 
 class Display:
     """ The core class which manages the window and drawing things to it """
@@ -20,10 +21,14 @@ class Display:
         self.actor_sprites = []
         self.background_sprites = None #TODO does not handle 'fancy' backgrounds yet
 
+
     def construct(self):
         """ Actually show the display """
         self.screen = pygame.display.set_mode((self._w, self._h))
         self.screen.fill(self.bg_color)
+        self.draw_options = pymunk.pygame_util.DrawOptions(self.screen)
+        self._world = self._game.world
+        
         pygame.display.flip()
 
     def update(self):
@@ -32,6 +37,8 @@ class Display:
 
         for actor in self._game.actors:
             actor.render(self.screen)
+
+        self._world.space.debug_draw(self.draw_options)
 
         pygame.display.flip()
 

@@ -123,7 +123,7 @@ class Game:
                 self.live = False
                 exit_message = "ERROR EXIT: error on culling dead actors"
 
-            clock.tick(50)
+            clock.tick(self.cfg_global["fps"])
 
 
         pygame.quit()
