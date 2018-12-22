@@ -38,10 +38,16 @@ class Actor:
     def render(self, screen):
         """ All drawing logic for displaying this actor onscreen """
         position = pymunk.pygame_util.to_pygame(self.body.position, screen)
+        local_x = (position[0] - self.w / 2) + self.game.display.x_offset
+        local_y = (position[1] - self.h / 2) + self.game.display.y_offset
+
+        self.x = local_x
+        self.y = local_y
+        
         pygame.draw.rect(
             screen,
             (0, 128, 255),
-            pygame.Rect(position[0] - self.w / 2, position[1] - self.h / 2, self.w, self.h)
+            pygame.Rect(local_x, local_y, self.w, self.h)
         )
 
     def sync(self):

@@ -24,6 +24,7 @@ class World:
         self.game.register_actor(wall.Wall(self, self.game))
         self.game.register_actor(wall.Wall(self, self.game, (200, 200), (400, 200)))
         self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
+        self.game.register_actor(wall.Wall(self, self.game, (10, 10), (1000, 10)))
 
     def update(self, dt):
         """ Run the physics simulation a step """
@@ -78,6 +79,9 @@ class World:
 
         self.player.body.velocity = v
 
+        # scroll viewport
+        self.game.display.scroll_viewport(self.player)
+
         self.space.step(dt)
         
     def register_actor(self, actor):
@@ -105,3 +109,7 @@ class World:
             if self.player.remaining_jumps > 1:
                 self.player.body.apply_impulse_at_world_point((0, 10000))
                 self.player.remaining_jumps -= 1
+
+        if event.type == KEYDOWN and event.key == K_SPACE:
+            print("Space was pressed")
+            self.game.display.y_offset += 10

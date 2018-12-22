@@ -16,6 +16,9 @@ class Display:
         self._h = self.cfg_display["window_height"]
         self.bg_color = Color(self.cfg_display["background_color"])
 
+        self.x_offset = 0
+        self.y_offset = 0
+
         #self.asset_manager = AssetManager(self.cfg_display["assets_url"])
 
         self.actor_sprites = []
@@ -38,10 +41,17 @@ class Display:
         for actor in self._game.actors:
             actor.render(self.screen)
 
-        self._world.space.debug_draw(self.draw_options)
+        #self._world.space.debug_draw(self.draw_options)
 
         pygame.display.flip()
 
     # TODO: don't know if this is actually needed
     def register_actor(self, actor):
         pass
+
+    # update offset to give a viewport margin around the given actor
+    def scroll_viewport(self, actor):
+        if actor.x > (self.x_offset + self._w - 20):
+            self.x_offset -= 1
+        elif actor.x < (self.x_offset + 20):
+            self.x_offset += 1
