@@ -24,7 +24,7 @@ class World:
         self.game.register_actor(wall.Wall(self, self.game))
         self.game.register_actor(wall.Wall(self, self.game, (200, 200), (400, 200)))
         self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
-        self.game.register_actor(wall.Wall(self, self.game, (10, 10), (1000, 10)))
+        self.game.register_actor(wall.Wall(self, self.game, (-10000, 10), (10000, 10)))
 
     def update(self, dt):
         """ Run the physics simulation a step """
