@@ -2,6 +2,7 @@
 
 import traceback
 import time
+import sys
 
 import pygame
 
@@ -125,10 +126,10 @@ class Game:
 
     def _update_actor_logic(self):
         """ Simple wrapper for updating the actors action systems """
-        for actor in actors:
+        for actor in self.actors:
             actor.pull_updates()
 
     def _sync_actor_world(self):
         """ Another wrapper for syncing the actors to the world """
-        for actor in actors:
+        for actor in self.actors:
             actor.sync()

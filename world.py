@@ -19,3 +19,6 @@ class World:
 
         poly = pymunk.Poly.create_box(body)
         self.space.add(body, poly)
+
+    def handle_event(self, event):
+        pass

@@ -15,3 +15,4 @@ config = {
 }
 
 game_instance = game.Game(world.World, config)
+game_instance.start()
