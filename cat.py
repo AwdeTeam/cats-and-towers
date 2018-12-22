@@ -19,6 +19,6 @@ config = {
 }
 
 game_instance = game.Game(world.World, config)
-game_instance.register_actor(actor.Actor(game_instance.world, game_instance))
-game_instance.register_actor(wall.Wall(game_instance.world, game_instance))
+#game_instance.register_actor(actor.Actor(game_instance.world, game_instance))
+#game_instance.register_actor(wall.Wall(game_instance.world, game_instance))
 game_instance.start()

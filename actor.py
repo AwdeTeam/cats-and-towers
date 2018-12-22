@@ -11,6 +11,7 @@ class Actor:
         self.y = 500
         self.h = 50
         self.w = 50
+        self.mass = 20.01
         self.body = None # physics
 
     def set_pos(self, x, y):
@@ -19,8 +20,8 @@ class Actor:
         self.y = y
 
     def init_physics(self, space):
-        #body = pymunk.Body(20, pymunk.moment_for_box(20, (self.h, self.w)))
-        body = pymunk.Body(20, 50)
+        body = pymunk.Body(self.mass, pymunk.moment_for_box(self.mass, (self.h, self.w)))
+        print(body.moment)
         body.position = self.x, self.y
         poly = pymunk.Poly.create_box(body, (self.h, self.w))
 
