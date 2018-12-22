@@ -13,26 +13,35 @@ class World:
         
         # this was previously in construct, but then cat.py can't add actors until game starts, possibly need better solution/pipeline for how things are added
         self.space = pymunk.Space()
-        self.space.gravity = (0, -500)
+        self.space.gravity = (0, -1000)
 
     def construct(self):
         """ Initialize physics world """
         self.player = actor.Actor(self, self.game)
         self.game.register_actor(self.player)
         self.game.register_actor(wall.Wall(self, self.game))
+        self.game.register_actor(wall.Wall(self, self.game, (200, 200), (400, 200)))
+        self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
 
     def update(self, dt):
         """ Run the physics simulation a step """
 
         # persistent keys
+
         keys = pygame.key.get_pressed()
         if (keys[K_d]):
-            #self.player.body.velocity = (100, self.player.body.velocity.y)
-            self.player.body.velocity = (min(self.player.body.velocity.x + 10, 1000), self.player.body.velocity.y)
+            # NOTE: allow slowing down from going the opposite direction quickly
+            v = self.player.body.velocity
+            if v.x < 0: v = (min(v.x + 100, 0), v.y)
+            else: v = (min(v.x + 10, 1000), v.y)
+            self.player.body.velocity = v
             
         if (keys[K_a]):
-            #self.player.body.velocity = (-100, self.player.body.velocity.y)
-            self.player.body.velocity = (max(self.player.body.velocity.x - 10, -1000), self.player.body.velocity.y)
+            v = self.player.body.velocity
+            if v.x > 0: v = (max(v.x - 100, 0), v.y)
+            else: v = (max(v.x - 10, -1000), v.y)
+            self.player.body.velocity = v
+            
         if (keys[K_s]):
             pass
 
@@ -57,6 +66,6 @@ class World:
     def handle_event(self, event):
         if event.type == KEYDOWN and event.key == K_w:
             print("w key was pressed")
-            self.player.body.apply_impulse_at_local_point((0, 5000))
+            self.player.body.apply_impulse_at_world_point((0, 10000))
             print(self.player.body.velocity)
         pass
