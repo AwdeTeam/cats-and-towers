@@ -42,6 +42,7 @@ class Game:
 
         self.actors[actor] = True
         self.display.register_actor(actor)
+        self.world.register_actor(actor)
 
     def kill_actor(self, actor):
         """ Set the actor up to be removed at the end of the loop """

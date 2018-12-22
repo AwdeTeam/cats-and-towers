@@ -29,3 +29,12 @@ class Display:
     def update(self):
         """ Draw everything on screen """
         self.screen.fill(self.bg_color)
+
+        for actor in self._game.actors:
+            actor.render(self.screen)
+
+        pygame.display.flip()
+
+    # TODO: don't know if this is actually needed
+    def register_actor(self, actor):
+        pass

@@ -9,10 +9,11 @@ config = {
     "graphics": {
         "window_width": 800,
         "window_height": 600,
-        "background_color": "#FF0000",
+        "background_color": "#111111",
         "assets_url": None,
     }
 }
 
 game_instance = game.Game(world.World, config)
+game_instance.register_actor(actor.Actor(game_instance.world, game_instance))
 game_instance.start()
