@@ -5,6 +5,7 @@ import time
 import sys
 
 import pygame
+import pygame.time
 
 #from ..core.graphics import Display, UserInterface
 from pgmodel.core.graphics import display
@@ -59,6 +60,8 @@ class Game:
         self.live = True
         exit_message = "No exit detected; something has gone quite wrong..."
         loop_start = time.time()
+
+        clock = pygame.time.Clock()
 
         # Initialize things
         try:
@@ -119,6 +122,8 @@ class Game:
                 traceback.print_exc()
                 self.live = False
                 exit_message = "ERROR EXIT: error on culling dead actors"
+
+            clock.tick(50)
 
 
         pygame.quit()

@@ -5,23 +5,29 @@ class World:
     def __init__(self, game, config):
         self.space = None
         self.game = game
+        self.actors = []
+        
+        # this was previously in construct, but then cat.py can't add actors until game starts, possibly need better solution/pipeline for how things are added
+        self.space = pymunk.Space()
+        self.space.gravity = 0, -.01
 
     def construct(self):
         """ Initialize physics world """
-        self.space = pymunk.Space()
-        self.space.gravity = 0, -1000
 
-    def update(self, delta):
+    def update(self, dt):
         """ Run the physics simulation a step """
-        self.space.step(delta)
+        self.space.step(dt)
 
     def register_actor(self, actor):
         """ Add physics entity for given actor """
-        body = pymunk.Body(1, 1666)
-        body.position = 50, 100
+        self.actors.append(actor)
+        
+        body = pymunk.Body(1, 1)
+        body.position = actor.x, actor.y
 
         poly = pymunk.Poly.create_box(body)
-        #self.space.add(body, poly)
+        self.space.add(body, poly)
+        actor.body = body
 
     def handle_event(self, event):
         pass
