@@ -19,14 +19,14 @@ class Wall:
     def init_physics(self, space):
         segment = pymunk.Segment(space.static_body, self.pos1, self.pos2, 3)
         self.segment = segment
+        self.segment.friction = .9
+        self.segment.elasticity = .9
         space.add(segment)
     
     def render(self, screen):
         """ All drawing logic for displaying this actor onscreen """
         position1 = pymunk.pygame_util.to_pygame(self.segment.a, screen)
         position2 = pymunk.pygame_util.to_pygame(self.segment.b, screen)
-        #print(position1)
-        #print(position2)
         pygame.draw.line(screen, (0, 128, 255), position1, position2)
         
 

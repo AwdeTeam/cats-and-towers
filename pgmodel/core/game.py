@@ -103,7 +103,7 @@ class Game:
             try:
                 if self.running:
                     self._sync_actor_world()
-                    self.world.update(time.time() - loop_start)
+                    self.world.update(1/self.cfg_global["fps"])
                     self.display.update()
                 #self.interface.update()
             except:

@@ -9,7 +9,7 @@ class World:
         
         # this was previously in construct, but then cat.py can't add actors until game starts, possibly need better solution/pipeline for how things are added
         self.space = pymunk.Space()
-        self.space.gravity = 0, -.01
+        self.space.gravity = (0, -500)
 
     def construct(self):
         """ Initialize physics world """
