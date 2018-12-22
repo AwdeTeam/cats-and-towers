@@ -33,6 +33,9 @@ class World:
         self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
         self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
 
+        self.game.register_actor(wall.Wall(self, self.game, (-10000, 10), (10000, 10)))
+
+
     def update(self, dt):
         """ Run the physics simulation a step """
 

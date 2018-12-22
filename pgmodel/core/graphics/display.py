@@ -15,6 +15,7 @@ class Display:
         self._w = self.cfg_display["window_width"]
         self._h = self.cfg_display["window_height"]
         self.bg_color = Color(self.cfg_display["background_color"])
+        self.viewport_pad = self.cfg_display["viewport_pad"]
 
         self.x_offset = 0
         self.y_offset = 0
@@ -51,7 +52,39 @@ class Display:
 
     # update offset to give a viewport margin around the given actor
     def scroll_viewport(self, actor):
-        if actor.x > (self.x_offset + self._w - 20):
-            self.x_offset -= 1
-        elif actor.x < (self.x_offset + 20):
-            self.x_offset += 1
+
+        #print("actor:",actor.x,actor.y)
+        #print("offset:",self.x_offset,self.y_offset)
+        #print("screen_end:",(self.x_offset + self._w - actor.w))
+        #print(self.screen.get_rect())
+
+        right_view_edge = self.x_offset + self._w - actor.w - self.viewport_pad
+        left_view_edge = self.x_offset + self.viewport_pad
+
+        top_view_edge = self.y_offset + self.viewport_pad
+        bottom_view_edge = self.y_offset + self._h - actor.h - self.viewport_pad
+
+        #print(left_view_edge, right_view_edge)
+
+
+        #actor_view_x = actor.x - self.x_offset
+        #print("actor view:", actor_view_x)
+        
+
+        diffx = 0.0
+        diffy = 0.0
+        
+        if actor.x > right_view_edge:
+            diffx = actor.x - right_view_edge
+            self.x_offset += diffx / 4
+        elif actor.x < left_view_edge:
+            diffx = left_view_edge - actor.x
+            self.x_offset -= diffx / 4
+
+        if actor.y < top_view_edge:
+            diffy = top_view_edge - actor.y
+            self.y_offset -= diffy / 4
+        elif actor.y > bottom_view_edge:
+            diffy = actor.y - bottom_view_edge
+            self.y_offset += diffy / 4
+        

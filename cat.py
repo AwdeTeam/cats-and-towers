@@ -15,6 +15,7 @@ config = {
         "window_height": 600,
         "background_color": "#111111",
         "assets_url": None,
+        "viewport_pad": 200
     }
 }
 
