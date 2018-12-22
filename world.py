@@ -1,6 +1,8 @@
 import pymunk
 import actor
 import wall
+import mob
+import random
 from pygame.locals import *
 import pygame
 from pymunk.vec2d import Vec2d
@@ -25,6 +27,11 @@ class World:
         self.game.register_actor(wall.Wall(self, self.game, (200, 200), (400, 200)))
         self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
         self.game.register_actor(wall.Wall(self, self.game, (10, 10), (1000, 10)))
+        self.game.register_actor(wall.Wall(self, self.game, (1000, 10), (1000, 1000)))
+        self.game.register_actor(wall.Wall(self, self.game, (10, 10), (10, 1000)))
+        self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
+        self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
+        self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
 
     def update(self, dt):
         """ Run the physics simulation a step """
