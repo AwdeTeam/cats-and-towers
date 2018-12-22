@@ -15,7 +15,7 @@ class Display:
         self._h = self.cfg_display["window_height"]
         self.bg_color = Color(self.cfg_display["background_color"])
 
-        self.asset_manager = AssetManager(self.cfg_display["assets_url"])
+        #self.asset_manager = AssetManager(self.cfg_display["assets_url"])
 
         self.actor_sprites = []
         self.background_sprites = None #TODO does not handle 'fancy' backgrounds yet

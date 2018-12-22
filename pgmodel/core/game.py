@@ -5,7 +5,8 @@ import time
 
 import pygame
 
-from ..core.graphics import Display, UserInterface
+#from ..core.graphics import Display, UserInterface
+from pgmodel.core.graphics import display
 
 class GameException(Exception):
     pass
@@ -29,9 +30,9 @@ class Game:
         self.world = World(self, config["world"]) #When world.construct() is called it creates actors
         self.actors = {} #For quick inclusion check; actors must be hashable
         self._cull_actors = [] #Get rid of these actors on the next iteration
-        self.display = graphics.Display(self, config["graphics"])
-        self.interface = graphics.UserInterface(self, config["ui"])
-        self.debugp = self.interface.get_print_debug()
+        self.display = display.Display(self, config["graphics"])
+        #self.interface = graphics.UserInterface(self, config["ui"])
+        #self.debugp = self.interface.get_print_debug()
 
     def register_actor(self, actor):
         """ Create the actor and add it to the world """
@@ -61,7 +62,7 @@ class Game:
         try:
             pygame.init()
             self.world.construct()
-            self.interface.construct()
+            #self.interface.construct()
             self.display.construct()
         except:
             traceback.print_exc()
@@ -83,9 +84,9 @@ class Game:
                     if event.type == pygame.QUIT:
                         self.live = False
                         exit_message = "USER EXIT: user closed pygame manually"
-                    else if self.interface.handle_event(event):
-                        pass
-                    else if self.running and self.world.handle_event(event):
+                    #elif self.interface.handle_event(event):
+                        #pass
+                    elif self.running and self.world.handle_event(event):
                         pass
                     else:
                         pass
@@ -99,7 +100,7 @@ class Game:
                     self._sync_actor_world()
                     self.world.update(time.time() - loop_start)
                     self.display.update()
-                self.interface.update()
+                #self.interface.update()
             except:
                 traceback.print_exc()
                 self.live = False
@@ -107,6 +108,7 @@ class Game:
 
             try:
                 for dead_actor in self._cull_actors:
+                    # NOTE: should maybe call a function instead of deleting?
                     if dead_actor in self.actors:
                         del self.actors[dead_actor]
                     else:
