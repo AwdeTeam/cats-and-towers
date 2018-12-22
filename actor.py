@@ -47,7 +47,7 @@ class Actor:
         pygame.draw.rect(
             screen,
             (0, 128, 255),
-            pygame.Rect(local_x - self.game.display.x_offset, local_y + self.game.display.y_offset, self.w, self.h)
+            pygame.Rect(local_x - self.game.display.x_offset, local_y - self.game.display.y_offset, self.w, self.h)
         )
 
     def sync(self):

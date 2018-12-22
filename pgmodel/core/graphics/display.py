@@ -61,6 +61,9 @@ class Display:
         right_view_edge = self.x_offset + self._w - actor.w - self.viewport_pad
         left_view_edge = self.x_offset + self.viewport_pad
 
+        top_view_edge = self.y_offset + self.viewport_pad
+        bottom_view_edge = self.y_offset + self._h - actor.h - self.viewport_pad
+
         #print(left_view_edge, right_view_edge)
 
 
@@ -69,12 +72,19 @@ class Display:
         
 
         diffx = 0.0
+        diffy = 0.0
         
         if actor.x > right_view_edge:
             diffx = actor.x - right_view_edge
             self.x_offset += diffx / 4
-
         elif actor.x < left_view_edge:
             diffx = left_view_edge - actor.x
             self.x_offset -= diffx / 4
-        #print(diffx)
+
+        if actor.y < top_view_edge:
+            diffy = top_view_edge - actor.y
+            self.y_offset -= diffy / 4
+        elif actor.y > bottom_view_edge:
+            diffy = actor.y - bottom_view_edge
+            self.y_offset += diffy / 4
+        
