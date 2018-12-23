@@ -30,7 +30,7 @@ class Game:
                                                          # paused; actors do not get updates
                                                          # and only the interface will recieve events
         self.world = World(self, config["world"]) #When world.construct() is called it creates actors
-        self.actors = {} #For quick inclusion check; actors must be hashable
+        self.actors = [] #For quick inclusion check; actors must be hashable
         self._cull_actors = [] #Get rid of these actors on the next iteration
         self.display = display.Display(self, config["graphics"])
         #self.interface = graphics.UserInterface(self, config["ui"])
@@ -41,12 +41,13 @@ class Game:
         if actor in self.actors:
             raise DuplicateActorException
 
-        self.actors[actor] = True
+        self.actors.append(actor)
         self.display.register_actor(actor)
         self.world.register_actor(actor)
 
     def kill_actor(self, actor):
         """ Set the actor up to be removed at the end of the loop """
+        #print("killing " + str(actor))
         if actor not in self.actors:
             raise NoSuchActorException
 
@@ -54,6 +55,7 @@ class Game:
             raise DuplicateActorException
 
         self._cull_actors.append(actor)
+        #print("actor is in dead:", (actor in self._cull_actors))
 
     def start(self):
         """ Start running the game """
@@ -113,11 +115,14 @@ class Game:
 
             try:
                 for dead_actor in self._cull_actors:
+                    #print("Now checking " + str(dead_actor))
                     # NOTE: should maybe call a function instead of deleting?
                     if dead_actor in self.actors:
-                        del self.actors[dead_actor]
+                        self.actors.remove(dead_actor)
+                        #del self.actors[dead_actor]
                     else:
                         raise NoSuchActorException
+                    self._cull_actors.remove(dead_actor)
             except:
                 traceback.print_exc()
                 self.live = False

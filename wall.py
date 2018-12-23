@@ -10,12 +10,15 @@ class Wall:
         self.pos1 = pos1
         self.pos2 = pos2
         self.segment = None
-        self.group = group
+        self.group = 5
 
     def set_pos(self, pos1, pos2):
         """ Change the position (onscreen?) of this actor """
         self.pos1 = pos1
         self.pos2 = pos2
+
+    def destroy(self, space):
+        space.remove(self.segment)
         
     def init_physics(self, space):
         segment = pymunk.Segment(space.static_body, self.pos1, self.pos2, 3)
@@ -24,7 +27,7 @@ class Wall:
         segment.collision_type = 2
         segment.group = self.group
         self.segment = segment
-        space.add(segment)
+        space.add(self.segment)
     
     def render(self, screen):
         """ All drawing logic for displaying this actor onscreen """

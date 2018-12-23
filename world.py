@@ -18,11 +18,13 @@ class World:
         self.actors = []
 
         self.generated_sectors = []
+        self.sector_walls = {}
         
         # this was previously in construct, but then cat.py can't add actors until game starts, possibly need better solution/pipeline for how things are added
         self.space = pymunk.Space()
         self.space.gravity = (0, -1000)
         self.space.damping = .9
+        self.space.sleep_time_threshold = 1
 
     def construct(self):
         """ Initialize physics world """
@@ -119,7 +121,7 @@ class World:
         self.game.display.scroll_viewport(self.player)
 
         self.check_if_near_border()
-        self.generate_mobs()
+        #self.generate_mobs()
         self.cull()
 
         self.space.step(dt)
@@ -133,25 +135,64 @@ class World:
         for y in range(sector_y-radius, sector_y+radius):
             for x in range(sector_x-radius, sector_x+radius):
                 self.ensure_sector(x, y)
-     
+
         #print(self.generated_sectors)
 
     def generate_mobs(self):
         dice = random.random()
         if dice < .05:
-            print("generating mob")
+            #print("generating mob")
             x = random.randint(-1000,1000)
             if x > 0:
                 x += self.game.display._w
-                
+
             y = random.randint(-1000,1000)
             if y > 0:
                 y += self.game.display._h
-            
+
             self.game.register_actor(mob.Mob(self, self.game, self.player.x + x, self.player.y + y))
 
     def cull(self):
-        pass       
+        #print("culling")
+
+        #for w in self.sector_walls[0]:
+        #    try:
+        #        print((w in self.actors))
+        #        print("killing")
+        #        print(self.game)
+        #        self.game.kill_actor(w)
+        #        print("killed")
+        #    except: pass
+        
+        
+        for sector in self.generated_sectors:
+            diff_x = abs(sector[0] - int(self.player.x / 1000))
+            diff_y = abs(sector[1] - int(self.player.y / 1000))
+            if diff_x > 5 or diff_y > 5:
+                #print("removing ", sector)
+                self.generated_sectors.remove(sector)
+
+                group_calc = sector[0]+sector[1]*100
+                #group_filter = pymunk.ShapeFilter()
+                #group_filter.group = group_calc
+                
+                try:
+                    #print(self.sector_walls[group_calc])
+                    for w in self.sector_walls[group_calc]:
+                        #w.destroy(self.space)
+                        #print((w in self.actors))
+                        self.game.kill_actor(w)
+                        self.actors.remove(w)
+                        del w
+                        #w.segment.sleep()
+                        #print(w.segment, " is sleeping")
+                        #print(self.space.shape_query(w.segment))
+                        #try:
+                        #    self.space.remove(w.segment)
+                        #    self.game.kill_actor(w)
+                        #except: pass
+                        #del w.segment
+                except: pass
 
     def ensure_sector(self, x, y):
         if (x,y) not in self.generated_sectors:
@@ -159,6 +200,7 @@ class World:
         
     def register_actor(self, actor):
         """ Add physics entity for given actor """
+        #print("adding", actor)
         self.actors.append(actor)
 
         actor.init_physics(self.space)
@@ -172,11 +214,13 @@ class World:
         #self.space.add(body, poly)
         #actor.body = body
         
+    def kill_actor(self, actor):
+        self.actors.remove(actor)
 
     def handle_event(self, event):
         if event.type == KEYDOWN and event.key == K_w:
-            print("w key was pressed")
-            print(self.player.remaining_jumps)
+            #print("w key was pressed")
+            #print(self.player.remaining_jumps)
 
             # TODO: check off by one error later
             if self.player.remaining_jumps > 1:
@@ -184,13 +228,16 @@ class World:
                 self.player.remaining_jumps -= 1
 
         if event.type == KEYDOWN and event.key == K_SPACE:
-            print("Space was pressed")
+            #print("Space was pressed")
             self.game.display.y_offset += 10
 
     def generate_sector(self, pos):
         self.generated_sectors.append(pos)
 
         group = pos[0]+pos[1]*100
+
+        self.sector_walls[group] = []
+
         
         # decide on vertical sections
         for y in range(0, 10):
@@ -199,7 +246,11 @@ class World:
                 dice = random.random()
                 if dice > .9 or (dice > .3 and x - 1 in x_used):
                     x_used.append(x)
-                    self.game.register_actor(wall.Wall(self, self.game, group, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + (x+1)*100), (pos[1]*1000 + y*100))))
+                    w = wall.Wall(self, self.game, group, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + (x+1)*100), (pos[1]*1000 + y*100)))
+                    self.sector_walls[group].append(w)
+                    self.game.register_actor(w)
+                    #print((w in self.actors))
+                    
                 
         # decide on horizontal sections
         for x in range(0, 10):
@@ -208,4 +259,7 @@ class World:
                 dice = random.random()
                 if dice > .8 or (dice > .3 and y - 1 in y_used):
                     y_used.append(y)
-                    self.game.register_actor(wall.Wall(self, self.game, group, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + x*100), (pos[1]*1000 + (y+1)*100))))
+                    w = wall.Wall(self, self.game, group, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + x*100), (pos[1]*1000 + (y+1)*100)))
+                    self.sector_walls[group].append(w)
+                    self.game.register_actor(w)
+                    #print((w in self.actors))

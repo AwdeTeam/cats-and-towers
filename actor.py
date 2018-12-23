@@ -24,7 +24,7 @@ class Actor:
 
     def init_physics(self, space):
         body = pymunk.Body(self.mass, pymunk.inf)
-        print(body.moment)
+        #print(body.moment)
         body.position = self.x, self.y
         poly = pymunk.Poly.create_box(body, (self.h, self.w))
 
