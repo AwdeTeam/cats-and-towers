@@ -40,7 +40,6 @@ class Actor:
     
     def render(self, screen):
         """ All drawing logic for displaying this actor onscreen """
-        pymunk.pygame_util.positive_y_is_up = False
         position = pymunk.pygame_util.to_pygame(self.body.position, screen)
         local_x = (position[0] - self.w / 2)
         local_y = (position[1] - self.h / 2)

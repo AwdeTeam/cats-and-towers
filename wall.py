@@ -37,10 +37,12 @@ class Wall:
 
         local_pos1 = position1
         local_pos1 = (local_pos1[0] - self.game.display.x_offset, local_pos1[1] - self.game.display.y_offset)
+        #local_pos1 = (local_pos1[0] - self.game.display.x_offset, self.game.display.y_offset - local_pos1[1])
         self.pos1 = position1
         
         local_pos2 = position2
         local_pos2 = (local_pos2[0] - self.game.display.x_offset, local_pos2[1] - self.game.display.y_offset)
+        #local_pos2 = (local_pos2[0] - self.game.display.x_offset, self.game.display.y_offset - local_pos2[1])
         self.pos2 = position2
         
         pygame.draw.line(screen, (0, 128, 255), local_pos1, local_pos2)

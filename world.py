@@ -22,7 +22,8 @@ class World:
         
         # this was previously in construct, but then cat.py can't add actors until game starts, possibly need better solution/pipeline for how things are added
         self.space = pymunk.Space()
-        self.space.gravity = (0, -1000)
+        #self.space.gravity = (0, -1000)
+        self.space.gravity = (0, 1000)
         self.space.damping = .9
         self.space.sleep_time_threshold = 1
 
@@ -84,7 +85,7 @@ class World:
             #print(arbiter.shapes[0].friction)
             #print(arbiter.shapes[1])
             #print(arbiter.shapes[1].friction)
-            n = -arbiter.contact_point_set.normal
+            n = arbiter.contact_point_set.normal
             #print(n)
             if n.y > grounding["normal"].y:
                 grounding["normal"] = n
@@ -233,7 +234,7 @@ class World:
 
                 if self.player.remaining_jumps > 1:
                     self.player.body.velocity = (self.player.body.velocity[0], 0)
-                    self.player.body.apply_impulse_at_world_point((0, 10000))
+                    self.player.body.apply_impulse_at_world_point((0, -10000))
                     self.player.remaining_jumps -= 1
             elif event.key == K_s:
                 self.player.poly.friction += 10
