@@ -121,7 +121,7 @@ class World:
         self.game.display.scroll_viewport(self.player)
 
         self.check_if_near_border()
-        #self.generate_mobs()
+        self.generate_mobs()
         self.cull()
 
         self.space.step(dt)
@@ -169,12 +169,16 @@ class World:
             diff_x = abs(sector[0] - int(self.player.x / 1000))
             diff_y = abs(sector[1] - int(self.player.y / 1000))
             if diff_x > 5 or diff_y > 5:
-                #print("removing ", sector)
+                print(self.player.x, self.player.y)
+                print("removing ", sector)
+                print("estimated user sector", int(self.player.x / 1000), int(self.player.y / 1000))
                 self.generated_sectors.remove(sector)
 
                 group_calc = sector[0]+sector[1]*100
                 #group_filter = pymunk.ShapeFilter()
                 #group_filter.group = group_calc
+
+                print(self.sector_walls[group_calc][0].pos1)
                 
                 try:
                     #print(self.sector_walls[group_calc])
@@ -237,6 +241,9 @@ class World:
 
     def generate_sector(self, pos):
         self.generated_sectors.append(pos)
+
+        print("Generating sector ", pos)
+        print("user:",self.player.x, self.player.y)
 
         group = pos[0]+pos[1]*100
 
