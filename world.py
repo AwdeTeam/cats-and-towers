@@ -40,6 +40,11 @@ class World:
             #print(arbiter.contact_point_set.normal)
             if arbiter.contact_point_set.normal[1] > .5:
                 return False
+            elif arbiter.contact_point_set.normal[1] < -.5:
+                keys = pygame.key.get_pressed()
+                if keys[K_s]:
+                    return False
+                return True
             return True
             
         platform_handler = self.space.add_collision_handler(1, 2)
@@ -84,18 +89,16 @@ class World:
         # persistent keys
         keys = pygame.key.get_pressed()
         v = self.player.body.velocity
-        if (keys[K_d]):
+        if keys[K_d]:
             # NOTE: allow slowing down from going the opposite direction quickly
             if v.x < 0 and well_grounded: v = (min(v.x + 100, 0), v.y)
             elif well_grounded: v = (min(v.x + 20, 2000), v.y)
             else: v = (min(v.x + 10, 2000), v.y)
-        if (keys[K_a]):
+        if keys[K_a]:
             v = self.player.body.velocity
             if v.x > 0 and well_grounded: v = (max(v.x - 100, 0), v.y)
             elif well_grounded: v = (max(v.x - 20, -2000), v.y)
             else: v = (max(v.x - 10, -2000), v.y)
-        if (keys[K_s]):
-            pass
 
         self.player.body.velocity = v
 
