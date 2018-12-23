@@ -5,7 +5,10 @@ import mob
 import random
 from pygame.locals import *
 import pygame
+import random
 from pymunk.vec2d import Vec2d
+
+# a sector is 1000x1000
 
 class World:
 
@@ -13,6 +16,8 @@ class World:
         self.space = None
         self.game = game
         self.actors = []
+
+        self.generated_sectors = []
         
         # this was previously in construct, but then cat.py can't add actors until game starts, possibly need better solution/pipeline for how things are added
         self.space = pymunk.Space()
@@ -23,17 +28,19 @@ class World:
         """ Initialize physics world """
         self.player = actor.Actor(self, self.game)
         self.game.register_actor(self.player)
-        self.game.register_actor(wall.Wall(self, self.game))
-        self.game.register_actor(wall.Wall(self, self.game, (200, 200), (400, 200)))
-        self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
-        self.game.register_actor(wall.Wall(self, self.game, (10, 10), (1000, 10)))
-        self.game.register_actor(wall.Wall(self, self.game, (1000, 10), (1000, 1000)))
-        self.game.register_actor(wall.Wall(self, self.game, (10, 10), (10, 1000)))
+        #self.game.register_actor(wall.Wall(self, self.game))
+        #self.game.register_actor(wall.Wall(self, self.game, (200, 200), (400, 200)))
+        #self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
+        #self.game.register_actor(wall.Wall(self, self.game, (10, 10), (1000, 10)))
+        #self.game.register_actor(wall.Wall(self, self.game, (1000, 10), (1000, 1000)))
+        #self.game.register_actor(wall.Wall(self, self.game, (10, 10), (10, 1000)))
         self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
         self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
         self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
 
         self.game.register_actor(wall.Wall(self, self.game, (-10000, 10), (10000, 10)))
+
+        self.generate_sector((0,0))
 
         def platform_collision_presolve(arbiter, space, data):
             #print("Handling collision")
@@ -136,3 +143,22 @@ class World:
         if event.type == KEYDOWN and event.key == K_SPACE:
             print("Space was pressed")
             self.game.display.y_offset += 10
+
+    def generate_sector(self, pos):
+        # decide on vertical sections
+        for y in range(0, 10):
+            x_used = []
+            for x in range(0, 10):
+                dice = random.random()
+                if dice > .9 or (dice > .3 and x - 1 in x_used):
+                    x_used.append(x)
+                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + (x+1)*100), (pos[1]*1000 + y*100))))
+                
+        # decide on horizontal sections
+        for x in range(0, 10):
+            for y in range(0, 10):
+                y_used = []
+                dice = random.random()
+                if dice > .8 or (dice > .3 and y - 1 in y_used):
+                    y_used.append(y)
+                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + x*100), (pos[1]*1000 + (y+1)*100))))
