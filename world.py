@@ -38,20 +38,26 @@ class World:
         self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
         self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
 
-        self.game.register_actor(wall.Wall(self, self.game, (-10000, 10), (10000, 10)))
+        #self.game.register_actor(wall.Wall(self, self.game, (-10000, 10), (10000, 10)))
 
-        self.generate_sector((0,0))
+        self.generate_sector((0, 0))
+        self.generate_sector((1, 0))
+        self.generate_sector((-1, 0))
+        self.generate_sector((0, 1))
+        self.generate_sector((0, -1))
+        self.generate_sector((1, 1))
+        self.generate_sector((1, -1))
+        self.generate_sector((-1, 1))
+        self.generate_sector((-1, -1))
 
         def platform_collision_presolve(arbiter, space, data):
-            #print("Handling collision")
-            #print(arbiter.contact_point_set.normal)
-            if arbiter.contact_point_set.normal[1] > .5:
-                return False
-            elif arbiter.contact_point_set.normal[1] < -.5:
-                keys = pygame.key.get_pressed()
-                if keys[K_s]:
-                    return False
-                return True
+            #if arbiter.contact_point_set.normal[1] > .5:
+            #    return False
+            #elif arbiter.contact_point_set.normal[1] < -.5:
+            #    keys = pygame.key.get_pressed()
+            #    if keys[K_s]:
+            #        return False
+            #    return True
             return True
             
         platform_handler = self.space.add_collision_handler(1, 2)
@@ -112,7 +118,35 @@ class World:
         # scroll viewport
         self.game.display.scroll_viewport(self.player)
 
+        self.check_if_near_border()
+
         self.space.step(dt)
+
+    def check_if_near_border(self):
+        sector_x = int(self.player.x / 1000)
+        sector_y = int(self.player.y / 1000)
+        print(sector_x, sector_y)
+
+        for y in range(sector_y-2, sector_y+2):
+            for x in range(sector_x-2, sector_x+2):
+                self.ensure_sector(x, y)
+                
+
+        #self.ensure_sector(sector_x, sector_y)
+        #self.ensure_sector(sector_x+1, sector_y)
+        #self.ensure_sector(sector_x-1, sector_y)
+        #self.ensure_sector(sector_x, sector_y+1)
+        #self.ensure_sector(sector_x, sector_y-1)
+        #self.ensure_sector(sector_x+1, sector_y+1)
+        #self.ensure_sector(sector_x+1, sector_y-1)
+        #self.ensure_sector(sector_x-1, sector_y+1)
+        #self.ensure_sector(sector_x-1, sector_y-1)
+        
+        print(self.generated_sectors)
+
+    def ensure_sector(self, x, y):
+        if (x,y) not in self.generated_sectors:
+            self.generate_sector((x, y))
         
     def register_actor(self, actor):
         """ Add physics entity for given actor """
@@ -145,6 +179,8 @@ class World:
             self.game.display.y_offset += 10
 
     def generate_sector(self, pos):
+        self.generated_sectors.append(pos)
+        
         # decide on vertical sections
         for y in range(0, 10):
             x_used = []
