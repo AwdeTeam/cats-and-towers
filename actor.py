@@ -13,6 +13,7 @@ class Actor:
         self.w = 50
         self.mass = 20
         self.body = None # physics
+        self.poly = None
         self.grounded = False
         self.allowed_jumps = 2
         self.remaining_jumps = self.allowed_jumps
@@ -26,15 +27,15 @@ class Actor:
         body = pymunk.Body(self.mass, pymunk.inf)
         #print(body.moment)
         body.position = self.x, self.y
-        poly = pymunk.Poly.create_box(body, (self.h, self.w))
+        self.poly = pymunk.Poly.create_box(body, (self.h, self.w))
 
-        poly.friction = .4
-        poly.elasticity = 0 # don't bounce
-        poly.collision_type = 1
+        self.poly.friction = .6
+        self.poly.elasticity = 0 # don't bounce
+        self.poly.collision_type = 1
         body.group = 1000
         
         self.body = body
-        space.add(body, poly)
+        space.add(body, self.poly)
         
     
     def render(self, screen):

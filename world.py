@@ -108,12 +108,12 @@ class World:
             # NOTE: allow slowing down from going the opposite direction quickly
             if v.x < 0 and well_grounded: v = (min(v.x + 100, 0), v.y)
             elif well_grounded: v = (min(v.x + 20, 2000), v.y)
-            else: v = (min(v.x + 10, 2000), v.y)
+            else: v = (min(v.x + 15, 2000), v.y)
         if keys[K_a]:
             v = self.player.body.velocity
             if v.x > 0 and well_grounded: v = (max(v.x - 100, 0), v.y)
             elif well_grounded: v = (max(v.x - 20, -2000), v.y)
-            else: v = (max(v.x - 10, -2000), v.y)
+            else: v = (max(v.x - 15, -2000), v.y)
 
         self.player.body.velocity = v
 
@@ -218,18 +218,22 @@ class World:
         self.actors.remove(actor)
 
     def handle_event(self, event):
-        if event.type == KEYDOWN and event.key == K_w:
-            #print("w key was pressed")
-            #print(self.player.remaining_jumps)
+        if event.type == KEYDOWN:
+            if event.key == K_w:
+                print("w key was pressed")
 
-            # TODO: check off by one error later
-            if self.player.remaining_jumps > 1:
-                self.player.body.apply_impulse_at_world_point((0, 10000))
-                self.player.remaining_jumps -= 1
+                if self.player.remaining_jumps > 1:
+                    self.player.body.velocity = (self.player.body.velocity[0], 0)
+                    self.player.body.apply_impulse_at_world_point((0, 10000))
+                    self.player.remaining_jumps -= 1
+            elif event.key == K_s:
+                print("friction up")
+                self.player.poly.friction += 10
 
-        if event.type == KEYDOWN and event.key == K_SPACE:
-            #print("Space was pressed")
-            self.game.display.y_offset += 10
+        if event.type == KEYUP:
+            if event.key == K_s:
+                print("friction down")
+                self.player.poly.friction -= 10
 
     def generate_sector(self, pos):
         self.generated_sectors.append(pos)
