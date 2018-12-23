@@ -4,12 +4,13 @@ import pymunk.pygame_util
 
 class Wall:
 
-    def __init__(self, world, game, pos1=(10, 100), pos2=(100,100)):
+    def __init__(self, world, game, pos1=(10, 100), pos2=(100,100), group):
         self.world = world
         self.game = game
         self.pos1 = pos1
         self.pos2 = pos2
         self.segment = None
+        self.group = group
 
     def set_pos(self, pos1, pos2):
         """ Change the position (onscreen?) of this actor """
@@ -21,6 +22,7 @@ class Wall:
         segment.friction = .4
         segment.elasticity = .9
         segment.collision_type = 2
+        segment.group = self.group
         self.segment = segment
         space.add(segment)
     

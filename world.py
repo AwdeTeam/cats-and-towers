@@ -119,30 +119,39 @@ class World:
         self.game.display.scroll_viewport(self.player)
 
         self.check_if_near_border()
+        self.generate_mobs()
+        self.cull()
 
         self.space.step(dt)
 
     def check_if_near_border(self):
         sector_x = int(self.player.x / 1000)
         sector_y = int(self.player.y / 1000)
-        print(sector_x, sector_y)
+        #print(sector_x, sector_y)
+        radius = 3
 
-        for y in range(sector_y-2, sector_y+2):
-            for x in range(sector_x-2, sector_x+2):
+        for y in range(sector_y-radius, sector_y+radius):
+            for x in range(sector_x-radius, sector_x+radius):
                 self.ensure_sector(x, y)
-                
+     
+        #print(self.generated_sectors)
 
-        #self.ensure_sector(sector_x, sector_y)
-        #self.ensure_sector(sector_x+1, sector_y)
-        #self.ensure_sector(sector_x-1, sector_y)
-        #self.ensure_sector(sector_x, sector_y+1)
-        #self.ensure_sector(sector_x, sector_y-1)
-        #self.ensure_sector(sector_x+1, sector_y+1)
-        #self.ensure_sector(sector_x+1, sector_y-1)
-        #self.ensure_sector(sector_x-1, sector_y+1)
-        #self.ensure_sector(sector_x-1, sector_y-1)
-        
-        print(self.generated_sectors)
+    def generate_mobs(self):
+        dice = random.random()
+        if dice < .05:
+            print("generating mob")
+            x = random.randint(-1000,1000)
+            if x > 0:
+                x += self.game.display._w
+                
+            y = random.randint(-1000,1000)
+            if y > 0:
+                y += self.game.display._h
+            
+            self.game.register_actor(mob.Mob(self, self.game, self.player.x + x, self.player.y + y))
+
+    def cull(self):
+        pass       
 
     def ensure_sector(self, x, y):
         if (x,y) not in self.generated_sectors:
@@ -180,6 +189,8 @@ class World:
 
     def generate_sector(self, pos):
         self.generated_sectors.append(pos)
+
+        group = pos[0]+pos[1]*100
         
         # decide on vertical sections
         for y in range(0, 10):
@@ -188,7 +199,7 @@ class World:
                 dice = random.random()
                 if dice > .9 or (dice > .3 and x - 1 in x_used):
                     x_used.append(x)
-                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + (x+1)*100), (pos[1]*1000 + y*100))))
+                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + (x+1)*100), (pos[1]*1000 + y*100))), group)
                 
         # decide on horizontal sections
         for x in range(0, 10):
@@ -197,4 +208,4 @@ class World:
                 dice = random.random()
                 if dice > .8 or (dice > .3 and y - 1 in y_used):
                     y_used.append(y)
-                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + x*100), (pos[1]*1000 + (y+1)*100))))
+                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + x*100), (pos[1]*1000 + (y+1)*100))), group)
