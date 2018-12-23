@@ -16,6 +16,7 @@ class World:
         self.space = None
         self.game = game
         self.actors = []
+        self.mobs = []
 
         self.generated_sectors = []
         self.sector_walls = {}
@@ -37,9 +38,9 @@ class World:
         #self.game.register_actor(wall.Wall(self, self.game, (10, 10), (1000, 10)))
         #self.game.register_actor(wall.Wall(self, self.game, (1000, 10), (1000, 1000)))
         #self.game.register_actor(wall.Wall(self, self.game, (10, 10), (10, 1000)))
-        self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
-        self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
-        self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
+        #self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
+        #self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
+        #self.game.register_actor(mob.Mob(self, self.game, random.randint(15,700), random.randint(15, 1000)))
 
         #self.game.register_actor(wall.Wall(self, self.game, (-10000, 10), (10000, 10)))
 
@@ -118,6 +119,10 @@ class World:
 
         self.player.body.velocity = v
 
+        # mob movement
+        for m in self.mobs:
+            m.adjust_movement(self.player)
+
         # scroll viewport
         self.game.display.scroll_viewport(self.player)
 
@@ -151,7 +156,9 @@ class World:
             if y > 0:
                 y += self.game.display._h
 
-            self.game.register_actor(mob.Mob(self, self.game, self.player.x + x, self.player.y + y))
+            m = mob.Mob(self, self.game, self.player.x + x, self.player.y + y)
+            self.game.register_actor(m)
+            self.mobs.append(m)
 
     def cull(self):
         #print("culling")

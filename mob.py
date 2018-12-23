@@ -32,7 +32,17 @@ class Mob:
         
         self.body = body
         space.add(body, poly)
+
+    def adjust_movement(self, player):
+
+        v = self.body.velocity
         
+        if (player.x < self.x):
+            v = (max(v.x - 30, -300), v.y)
+        else:
+            v = (min(v.x + 30, 300), v.y)
+
+        self.body.velocity = v
     
     def render(self, screen):
         """ All drawing logic for displaying this actor onscreen """
