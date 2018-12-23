@@ -4,7 +4,7 @@ import pymunk.pygame_util
 
 class Wall:
 
-    def __init__(self, world, game, pos1=(10, 100), pos2=(100,100), group):
+    def __init__(self, world, game, group, pos1=(10, 100), pos2=(100,100)):
         self.world = world
         self.game = game
         self.pos1 = pos1

@@ -199,7 +199,7 @@ class World:
                 dice = random.random()
                 if dice > .9 or (dice > .3 and x - 1 in x_used):
                     x_used.append(x)
-                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + (x+1)*100), (pos[1]*1000 + y*100))), group)
+                    self.game.register_actor(wall.Wall(self, self.game, group, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + (x+1)*100), (pos[1]*1000 + y*100))))
                 
         # decide on horizontal sections
         for x in range(0, 10):
@@ -208,4 +208,4 @@ class World:
                 dice = random.random()
                 if dice > .8 or (dice > .3 and y - 1 in y_used):
                     y_used.append(y)
-                    self.game.register_actor(wall.Wall(self, self.game, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + x*100), (pos[1]*1000 + (y+1)*100))), group)
+                    self.game.register_actor(wall.Wall(self, self.game, group, ((pos[0]*1000 + x*100), (pos[1]*1000 + y*100)), ((pos[0]*1000 + x*100), (pos[1]*1000 + (y+1)*100))))
