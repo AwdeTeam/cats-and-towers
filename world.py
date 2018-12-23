@@ -169,20 +169,24 @@ class World:
             diff_x = abs(sector[0] - int(self.player.x / 1000))
             diff_y = abs(sector[1] - int(self.player.y / 1000))
             if diff_x > 5 or diff_y > 5:
-                print(self.player.x, self.player.y)
-                print("removing ", sector)
-                print("estimated user sector", int(self.player.x / 1000), int(self.player.y / 1000))
+                print("rem:user pos:", self.player.x, self.player.y)
+                print("rem:removing ", sector)
+                print("rem:estimated user sector", int(self.player.x / 1000), int(self.player.y / 1000))
                 self.generated_sectors.remove(sector)
 
-                group_calc = sector[0]+sector[1]*100
+                #group_calc = sector[0]+sector[1]*100
                 #group_filter = pymunk.ShapeFilter()
                 #group_filter.group = group_calc
 
-                print(self.sector_walls[group_calc][0].pos1)
+                index = str(sector[0]) + "," + str(sector[1])
+
+                print("rem:index:", index)
+                print("rem:Wall ex:", self.sector_walls[index][0].pos1)
                 
                 try:
                     #print(self.sector_walls[group_calc])
-                    for w in self.sector_walls[group_calc]:
+                    for w in self.sector_walls[index]:
+                        print("\t", w.pos1)
                         #w.destroy(self.space)
                         #print((w in self.actors))
                         self.game.kill_actor(w)
@@ -197,6 +201,7 @@ class World:
                         #except: pass
                         #del w.segment
                 except: pass
+                print("rem:sectors:",self.generated_sectors)
 
     def ensure_sector(self, x, y):
         if (x,y) not in self.generated_sectors:
@@ -210,7 +215,7 @@ class World:
         actor.init_physics(self.space)
         
         #self.space.add(body, poly)
-        
+ 
         #body = pymunk.Body(1, 1)
         #body.position = actor.x, actor.y
 
@@ -224,28 +229,27 @@ class World:
     def handle_event(self, event):
         if event.type == KEYDOWN:
             if event.key == K_w:
-                print("w key was pressed")
+                #print("w key was pressed")
 
                 if self.player.remaining_jumps > 1:
                     self.player.body.velocity = (self.player.body.velocity[0], 0)
                     self.player.body.apply_impulse_at_world_point((0, 10000))
                     self.player.remaining_jumps -= 1
             elif event.key == K_s:
-                print("friction up")
                 self.player.poly.friction += 10
 
         if event.type == KEYUP:
             if event.key == K_s:
-                print("friction down")
                 self.player.poly.friction -= 10
 
     def generate_sector(self, pos):
         self.generated_sectors.append(pos)
 
-        print("Generating sector ", pos)
-        print("user:",self.player.x, self.player.y)
+        print("gen:Generating sector ", pos)
+        print("gen:user:", self.player.x, self.player.y)
 
-        group = pos[0]+pos[1]*100
+        group = str(pos[0]) + "," + str(pos[1])
+        print("gen:index:",group)
 
         self.sector_walls[group] = []
 
@@ -274,3 +278,5 @@ class World:
                     self.sector_walls[group].append(w)
                     self.game.register_actor(w)
                     #print((w in self.actors))
+
+        print("gen:wall ex:",self.sector_walls[group][0].pos1)

@@ -31,6 +31,7 @@ class Wall:
     
     def render(self, screen):
         """ All drawing logic for displaying this actor onscreen """
+        pymunk.pygame_util.positive_y_is_up = False
         position1 = pymunk.pygame_util.to_pygame(self.segment.a, screen)
         position2 = pymunk.pygame_util.to_pygame(self.segment.b, screen)
 
