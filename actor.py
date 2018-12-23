@@ -30,6 +30,7 @@ class Actor:
 
         poly.friction = .4
         poly.elasticity = 0 # don't bounce
+        poly.collision_type = 1
         
         self.body = body
         space.add(body, poly)
