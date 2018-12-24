@@ -29,6 +29,9 @@ class Actor:
         pygame.font.init()
         self.font = pygame.font.SysFont('Arial', 16)
 
+        self.jump_refresh_max = 10
+        self.jump_refresh = 0
+
     def set_pos(self, x, y):
         """ Change the position (onscreen?) of this actor """
         self.x = x
@@ -62,9 +65,9 @@ class Actor:
         if self.life > 8000: self.life = 8000
 
         if movement < 5:
-            self.life_drain += .2
+            self.life_drain += .3
         else:
-            self.life_drain -= 4
+            self.life_drain -= 2
 
         if self.life_drain < 4: self.life_drain = 4
         if self.life_drain > 40: self.life_drain = 40
@@ -108,11 +111,13 @@ class Actor:
         score_surface = self.font.render(str(self.score), False, (255,255,255))
         life_drain_surface = self.font.render(str(int(self.life_drain)), False, life_drain_color)
         mob_count_surface = self.font.render(str(len(self.world.mobs)), False, (255, 255, 255))
+        mob_gen_surface = self.font.render(str(int((self.world.time_factor + .05)*100)) + "%", False, (255, 255, 255))
         
-        screen.blit(life_surface, (0,0))
-        screen.blit(score_surface, (100,0))
-        screen.blit(life_drain_surface, (200,0))
-        screen.blit(mob_count_surface, (300,0))
+        screen.blit(life_surface, (0, 0))
+        screen.blit(score_surface, (100, 0))
+        screen.blit(life_drain_surface, (200, 0))
+        screen.blit(mob_count_surface, (300, 0))
+        screen.blit(mob_gen_surface, (400, 0))
 
     def sync(self):
         # TODO: not sure what this is supposed to do?

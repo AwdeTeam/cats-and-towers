@@ -120,6 +120,8 @@ class World:
             else: v = (max(v.x - 15, -2000), v.y)
 
         self.player.body.velocity = v
+        self.player.jump_refresh -= 1
+        if self.player.jump_refresh < 0: self.player.jump_refresh = 0
         self.player.handle_movement()
 
         # mob movement
@@ -154,7 +156,7 @@ class World:
         if dice < (.05 + self.time_factor):
             if self.time_factor < 1: self.time_factor += .0005
             
-            print(str(.05 + self.time_factor))
+            #print(str(.05 + self.time_factor))
             #print("generating mob")
             x = random.randint(-1000,1000)
             if x > 0:
@@ -175,13 +177,13 @@ class World:
             diffy = abs(m.y - self.player.y)
 
             if diffx > 3000 or diffy > 3000:
-                print("culling mob")
+                #print("culling mob")
                 #m.body.sleep()
-                try:
-                    print("Trying to remove body")
+                #try:
+                    #print("Trying to remove body")
                     #self.space.remove(m.body)
                     #self.space.remove(m.poly)
-                except: print("Failed to remove mob physics")
+                #except: print("Failed to remove mob physics")
                 self.mobs.remove(m)
                 self.game.kill_actor(m)
                 
@@ -203,9 +205,9 @@ class World:
             diff_x = abs(sector[0] - int(self.player.x / 1000))
             diff_y = abs(sector[1] - int(self.player.y / 1000))
             if diff_x > 5 or diff_y > 5:
-                print("rem:user pos:", self.player.x, self.player.y)
-                print("rem:removing ", sector)
-                print("rem:estimated user sector", int(self.player.x / 1000), int(self.player.y / 1000))
+                #print("rem:user pos:", self.player.x, self.player.y)
+                #print("rem:removing ", sector)
+                #print("rem:estimated user sector", int(self.player.x / 1000), int(self.player.y / 1000))
                 self.generated_sectors.remove(sector)
 
                 #group_calc = sector[0]+sector[1]*100
@@ -214,13 +216,13 @@ class World:
 
                 index = str(sector[0]) + "," + str(sector[1])
 
-                print("rem:index:", index)
-                print("rem:Wall ex:", self.sector_walls[index][0].pos1)
+                #print("rem:index:", index)
+                #print("rem:Wall ex:", self.sector_walls[index][0].pos1)
                 
                 try:
                     #print(self.sector_walls[group_calc])
                     for w in self.sector_walls[index]:
-                        print("\t", w.pos1)
+                        #print("\t", w.pos1)
                         #w.destroy(self.space)
                         #print((w in self.actors))
                         try: self.space.remove(w.segment)
@@ -237,7 +239,7 @@ class World:
                         #except: pass
                         #del w.segment
                 except: pass
-                print("rem:sectors:",self.generated_sectors)
+                #print("rem:sectors:",self.generated_sectors)
 
     def ensure_sector(self, x, y):
         if (x,y) not in self.generated_sectors:
@@ -267,10 +269,11 @@ class World:
             if event.key == K_w:
                 #print("w key was pressed")
 
-                if self.player.remaining_jumps > 1:
+                if self.player.remaining_jumps > 1 and self.player.jump_refresh == 0:
                     self.player.body.velocity = (self.player.body.velocity[0], 0)
                     self.player.body.apply_impulse_at_world_point((0, -10000))
                     self.player.remaining_jumps -= 1
+                    self.player.jump_refresh = self.player.jump_refresh_max
             elif event.key == K_s:
                 self.player.poly.friction += 10
 
@@ -281,11 +284,11 @@ class World:
     def generate_sector(self, pos):
         self.generated_sectors.append(pos)
 
-        print("gen:Generating sector ", pos)
-        print("gen:user:", self.player.x, self.player.y)
+        #print("gen:Generating sector ", pos)
+        #print("gen:user:", self.player.x, self.player.y)
 
         group = str(pos[0]) + "," + str(pos[1])
-        print("gen:index:",group)
+        #print("gen:index:",group)
 
         self.sector_walls[group] = []
 
@@ -315,4 +318,4 @@ class World:
                     self.game.register_actor(w)
                     #print((w in self.actors))
 
-        print("gen:wall ex:",self.sector_walls[group][0].pos1)
+        #print("gen:wall ex:",self.sector_walls[group][0].pos1)
