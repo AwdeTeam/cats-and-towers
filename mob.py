@@ -28,6 +28,7 @@ class Mob:
         body.position = self.x, self.y
         poly = pymunk.Poly.create_box(body, (self.h, self.w))
 
+        #poly.friction = .4
         poly.friction = .4
         poly.elasticity = 0 # don't bounce
         

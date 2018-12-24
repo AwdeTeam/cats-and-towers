@@ -27,6 +27,7 @@ class World:
         self.space.gravity = (0, 1000)
         self.space.damping = .9
         self.space.sleep_time_threshold = 1
+        self.time_factor = 0
 
     def construct(self):
         """ Initialize physics world """
@@ -150,7 +151,10 @@ class World:
 
     def generate_mobs(self):
         dice = random.random()
-        if dice < .05:
+        if dice < (.05 + self.time_factor):
+            if self.time_factor < 1: self.time_factor += .0005
+            
+            print(str(.05 + self.time_factor))
             #print("generating mob")
             x = random.randint(-1000,1000)
             if x > 0:

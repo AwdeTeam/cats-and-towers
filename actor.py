@@ -59,6 +59,8 @@ class Actor:
 
         self.life += movement
 
+        if self.life > 8000: self.life = 8000
+
         if movement < 5:
             self.life_drain += .2
         else:
