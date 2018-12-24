@@ -32,6 +32,7 @@ class World:
         """ Initialize physics world """
         self.player = actor.Actor(self, self.game)
         self.game.register_actor(self.player)
+        self.game.display.main_player = self.player
         #self.game.register_actor(wall.Wall(self, self.game))
         #self.game.register_actor(wall.Wall(self, self.game, (200, 200), (400, 200)))
         #self.game.register_actor(wall.Wall(self, self.game, (400, 300), (500, 300)))
@@ -118,6 +119,7 @@ class World:
             else: v = (max(v.x - 15, -2000), v.y)
 
         self.player.body.velocity = v
+        self.player.handle_movement()
 
         # mob movement
         for m in self.mobs:

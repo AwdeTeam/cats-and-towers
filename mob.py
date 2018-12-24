@@ -1,6 +1,7 @@
 import pygame
 import pymunk
 import pymunk.pygame_util
+import random
 
 class Mob:
 
@@ -34,6 +35,10 @@ class Mob:
         space.add(body, poly)
 
     def adjust_movement(self, player):
+
+        dice = random.random()
+        if dice < .01 or (player.y < self.y and dice < .02):
+             self.body.apply_impulse_at_world_point((0, -10000))
 
         v = self.body.velocity
         

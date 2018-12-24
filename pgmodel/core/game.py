@@ -36,6 +36,9 @@ class Game:
         #self.interface = graphics.UserInterface(self, config["ui"])
         #self.debugp = self.interface.get_print_debug()
 
+        self.game_over = False
+        self.score = 0
+
     def register_actor(self, actor):
         """ Create the actor and add it to the world """
         if actor in self.actors:
@@ -79,6 +82,10 @@ class Game:
         # Run main game loop
         while self.live:
             if self.running:
+
+                if self.game_over:
+                    self.display.draw_game_over()
+                
                 try:
                     self._update_actor_logic()
                 except:
@@ -103,7 +110,7 @@ class Game:
                 exit_message = "ERROR EXIT: exception in event handling"
 
             try:
-                if self.running:
+                if self.running and not self.game_over:
                     self._sync_actor_world()
                     self.world.update(1/self.cfg_global["fps"])
                     self.display.update()

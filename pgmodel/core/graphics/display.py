@@ -25,6 +25,10 @@ class Display:
         self.actor_sprites = []
         self.background_sprites = None #TODO does not handle 'fancy' backgrounds yet
 
+        self.main_player = None
+        
+        pygame.font.init()
+        self.font = pygame.font.SysFont('Arial', 30)
 
     def construct(self):
         """ Actually show the display """
@@ -39,12 +43,20 @@ class Display:
         """ Draw everything on screen """
         self.screen.fill(self.bg_color)
 
+
         for actor in self._game.actors:
             actor.render(self.screen)
 
         #self._world.space.debug_draw(self.draw_options)
+        self.main_player.render_score(self.screen)
 
         pygame.display.flip()
+
+    def draw_game_over(self):
+        font_surface = self.font.render("GAME OVER - " + str(self._game.score), False, (255, 255, 255))
+        self.screen.blit(font_surface, (200, 200))
+        pygame.display.flip()
+
 
     # TODO: don't know if this is actually needed
     def register_actor(self, actor):
