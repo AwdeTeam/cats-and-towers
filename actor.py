@@ -105,10 +105,12 @@ class Actor:
         life_surface = self.font.render(str(int(self.life)), False, life_color)
         score_surface = self.font.render(str(self.score), False, (255,255,255))
         life_drain_surface = self.font.render(str(int(self.life_drain)), False, life_drain_color)
+        mob_count_surface = self.font.render(str(len(self.world.mobs)), False, (255, 255, 255))
         
         screen.blit(life_surface, (0,0))
         screen.blit(score_surface, (100,0))
         screen.blit(life_drain_surface, (200,0))
+        screen.blit(mob_count_surface, (300,0))
 
     def sync(self):
         # TODO: not sure what this is supposed to do?

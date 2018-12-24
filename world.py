@@ -132,6 +132,8 @@ class World:
         self.generate_mobs()
         self.cull()
 
+        self.cull_mobs()
+
         self.space.step(dt)
 
     def check_if_near_border(self):
@@ -161,6 +163,24 @@ class World:
             m = mob.Mob(self, self.game, self.player.x + x, self.player.y + y)
             self.game.register_actor(m)
             self.mobs.append(m)
+
+    def cull_mobs(self):
+        #print(len(self.mobs))
+        for m in self.mobs:
+            diffx = abs(m.x - self.player.x)
+            diffy = abs(m.y - self.player.y)
+
+            if diffx > 3000 or diffy > 3000:
+                print("culling mob")
+                #m.body.sleep()
+                try:
+                    print("Trying to remove body")
+                    #self.space.remove(m.body)
+                    #self.space.remove(m.poly)
+                except: print("Failed to remove mob physics")
+                self.mobs.remove(m)
+                self.game.kill_actor(m)
+                
 
     def cull(self):
         #print("culling")
@@ -199,6 +219,8 @@ class World:
                         print("\t", w.pos1)
                         #w.destroy(self.space)
                         #print((w in self.actors))
+                        try: self.space.remove(w.segment)
+                        except: print("Failed to remove wall physics segment")
                         self.game.kill_actor(w)
                         self.actors.remove(w)
                         del w
